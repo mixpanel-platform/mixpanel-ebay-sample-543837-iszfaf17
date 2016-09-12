@@ -15,36 +15,100 @@
       <div style="clear: both;"></div>
       <div id="graph"></div>
     </div>
-    <div id="table"></div>
+    <div class="mixpanel-platform-section2">
+      <div id="eventSelect2" style="float: left;"></div>
+      <div id="by2" class="mixpanel-platform-label" style="margin-left: 10px; display: none;">by</div>
+      <div id="propSelect2" style="float: left;"></div>
+      <div id="dateSelect2" style="float: right;"></div>
+      <div style="clear: both;"></div>
+      <div id="graph2"></div>
+    </div>
+    <div class="mixpanel-platform-section3">
+      <div id="eventSelect3" style="float: left;"></div>
+      <div id="by3" class="mixpanel-platform-label" style="margin-left: 10px; display: none;">by</div>
+      <div id="propSelect3" style="float: left;"></div>
+      <div id="dateSelect3" style="float: right;"></div>
+      <div style="clear: both;"></div>
+      <div id="graph3"></div>
+    </div>
     <script>
       var eventSelect = $('#eventSelect').MPEventSelect();
       var propSelect  = $('#propSelect').MPPropertySelect();
       var dateSelect  = $('#dateSelect').MPDatepicker();
       var eventGraph  = $('#graph').MPChart({chartType: 'line'});
-      var eventTable  = $('#table').MPTable({
+      
+      var eventSelect2 = $('#eventSelect2').MPEventSelect();
+      var propSelect2  = $('#propSelect2').MPPropertySelect();
+      var dateSelect2  = $('#dateSelect2').MPDatepicker();
+      var eventGraph2  = $('#graph2').MPChart({chartType: 'bar'});
+      
+      var eventSelect3 = $('#eventSelect3').MPEventSelect();
+      var propSelect3  = $('#propSelect3').MPPropertySelect();
+      var dateSelect3  = $('#dateSelect3').MPDatepicker();
+      var eventGraph3  = $('#graph3').MPChart({chartType: 'pie'});
+      /*var eventTable3  = $('#table').MPTable({
         showPercentages: true,
         firstColHeader: 'Event'
-      });
+      });*/
 
       var runQuery = function() {
         var eventName = eventSelect.MPEventSelect('value'),
             propName  = propSelect.MPPropertySelect('value'),
             dateRange = dateSelect.MPDatepicker('value');
+            
+        var eventName2 = eventSelect2.MPEventSelect('value'),
+            propName2  = propSelect2.MPPropertySelect('value'),
+            dateRange2 = dateSelect2.MPDatepicker('value');
+            
+        var eventName3 = eventSelect3.MPEventSelect('value'),
+            propName3  = propSelect3.MPPropertySelect('value'),
+            dateRange3 = dateSelect3.MPDatepicker('value');
 
         if (eventName) {
           MP.api.segment(eventName, propName, dateRange).done(function(results) {
             eventGraph.MPChart('setData', results);
-            eventTable.MPTable('setData', results);
+          });
+        }
+        
+        if (eventName2) {
+          MP.api.segment(eventName2, propName2, dateRange2).done(function(results) {
+            eventGraph2.MPChart('setData', results);
+          });
+        }
+        
+        if (eventName3) {
+          MP.api.segment(eventName3, propName3, dateRange3).done(function(results) {
+            eventGraph3.MPChart('setData', results);
           });
         }
       };
+      
       eventSelect.on('change', function(e, eventName) {
         propSelect.MPPropertySelect('setEvent', eventName);
         $("#by").show();
         runQuery();
       });
+      
+       eventSelect2.on('change', function(e, eventName) {
+        propSelect2.MPPropertySelect('setEvent', eventName);
+        $("#by2").show();
+        runQuery();
+      });
+      
+       eventSelect3.on('change', function(e, eventName) {
+        propSelect3.MPPropertySelect('setEvent', eventName);
+        $("#by3").show();
+        runQuery();
+      });
+      
       propSelect.on('change', runQuery);
       dateSelect.on('change', runQuery);
+      
+      propSelect2.on('change', runQuery);
+      dateSelect2.on('change', runQuery);
+      
+      propSelect3.on('change', runQuery);
+      dateSelect3.on('change', runQuery);
     </script>
   </body>
 </html>
